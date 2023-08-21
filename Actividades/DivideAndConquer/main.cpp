@@ -15,6 +15,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <iomanip>
 
 // Project Files
 #include "merge_sort.h"
@@ -31,11 +32,11 @@ int main()
     std::cout << "Enter the number of elements: ";
     std::cin >> N;
 
-    std::vector<int> values(N);
+    std::vector<double> values(N);
 
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_int_distribution<int> dist(0.0, 100.0);
+    std::uniform_real_distribution<double> dist(0.0, 100.0);
 
     for (int i{}; i < N; ++i)
         values[i] = dist(mt);
@@ -44,9 +45,15 @@ int main()
     for (auto const &value : values)
         std::cout << value << " ";
 
-    merge_sort(values.begin(), values.end());
+    merge_sort(values.begin(), values.end(),
+               std::greater<double>{});
 
     std::cout << "\nAfter sorting: ";
     for (auto const &value : values)
-        std::cout << value << " ";
+    {
+        std::cout << std::setprecision(4) << value;
+
+        if (&value != &values.back())
+            std::cout << ", ";
+    }
 }
