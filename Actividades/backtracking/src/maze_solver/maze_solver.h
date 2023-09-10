@@ -16,9 +16,15 @@
 
 // C++ Standard Library
 #include <vector>
+#include <cstdint>
 #include <unordered_map>
 #include <optional>
 #include <string>
+
+// Using
+using Maze = std::vector<std::vector<int>>;
+using Visited = std::vector<std::vector<std::int8_t>>;
+using MazeSolution = std::unordered_map<int, std::pair<int, int>>;
 
 /**
  * @class MazeSolver
@@ -29,21 +35,21 @@ class MazeSolver
 public:
     // Constructor
     MazeSolver() = delete;
-    MazeSolver(const std::vector<std::vector<int>> &,
-               const int &, const int &);
+    MazeSolver(const Maze &);
 
     // Methods
-    bool solve_maze();
+    bool solve_maze() const;
     std::string to_string() const noexcept;
 
 private:
-    std::vector<std::vector<int>> m_maze;
-    std::unordered_map<int, std::pair<int, int>> m_solutions;
+    const Maze &m_maze;
+    mutable Visited m_visited;
+    mutable MazeSolution m_solutions;
     int m_rows, m_cols;
 
     // Methods
-    bool is_safe(const int &, const int &);
-    bool solve_maze_until(const int &, const int &);
+    inline bool is_safe(const int &, const int &) const noexcept;
+    bool solve_maze_until(const int &, const int &) const noexcept;
 };
 
 #endif //! MAZE_SOLVER_H
