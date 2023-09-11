@@ -38,7 +38,9 @@ MazeSolver::MazeSolver(const Maze &maze) : m_maze{maze}
  * Solve the maze
  * @return true If the maze was solved
  * @return false If the maze couldn't be solved
- *
+ * @time_complexity O(2^(m * n)) as the worst case.
+ * @space_complexity O(1)
+ * @see solve_maze_until for more details
  */
 bool MazeSolver::solve_maze() const
 {
@@ -49,6 +51,8 @@ bool MazeSolver::solve_maze() const
  * @brief
  * Convert the maze to a string
  * @return std::string String representation of the maze
+ * @time_complexity O(n * m), n is the num of rows and m is the num of cols
+ * @space_complexity O(n * m), n is the num of rows and m is the num of cols
  */
 std::string MazeSolver::to_string() const noexcept
 {
@@ -79,6 +83,8 @@ std::string MazeSolver::to_string() const noexcept
  * @param col Column of the next position
  * @return true If the next position is safe
  * @return false If the next position is not safe
+ * @time_complexity O(1) (constant)
+ * @space_complexity O(1) (constant)
  */
 inline bool MazeSolver::is_safe(const int &row, const int &col) const noexcept
 {
@@ -94,6 +100,11 @@ inline bool MazeSolver::is_safe(const int &row, const int &col) const noexcept
  * @param col Column of the current position
  * @return True if the maze was solved
  * @return False if the maze couldn't be solved
+ * @time_complexity O(2^(m * n)) as the worst case.
+ * @details The worst case happens when it needs to explore all
+ *          the possible paths. It is exponential because it is
+ *          a recursive algorithm.
+ * @space_complexity O(m * n) as the worst case.
  */
 bool MazeSolver::solve_maze_until(const int &row,
                                   const int &col) const noexcept
