@@ -1,0 +1,4 @@
+Tu programa debe compilar sin errores ni warnings
+Piensa en posibles casos de prueba extremos que pueden ser utilizados para probar tu programa.
+Tu solucion propuesta debe ser correcta y eficiente
+Tu programa debe ser llamado main.cpp
