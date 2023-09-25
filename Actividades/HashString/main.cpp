@@ -1,5 +1,5 @@
 /**
- * @file maze_solver.h
+ * @file main.cpp
  * @author Carlos Salguero
  * @author Sergio Garnica
  * @author Alejandra Cabrera
