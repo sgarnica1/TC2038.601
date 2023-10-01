@@ -15,12 +15,35 @@ std::vector<std::string> get_files_content(std::string directory);
 
 int main(int argc, char **argv)
 {
+  std::cout << "=====================================================\n"
+            << " TRANSMISSION FILES\n"
+            << "=====================================================\n\n";
   std::vector<std::string> transmission_files = get_files_content("transmission");
+
+  std::cout << "=====================================================\n"
+            << " MCODE FILES\n"
+            << "=====================================================\n\n";
   std::vector<std::string> mcode_files = get_files_content("mcode");
 
+  // Search for mcode in transmission files
+  std::cout << "\n=====================================================\n"
+            << " MCODE SEARCH RESULTS\n"
+            << "=====================================================\n\n";
+  int transmission_index = 0;
+  int mcode_index = 0;
   for (const auto &file : transmission_files)
+  {
+    std::cout << "\nT R A N S M I S S I O N: " << ++transmission_index << "\n\n";
+
     for (const auto &mcode : mcode_files)
+    {
+      std::cout << "mcode " << ++mcode_index << "\n";
       KMPSearch(const_cast<char *>(mcode.c_str()), const_cast<char *>(file.c_str()));
+      std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+  }
 
   return 0;
 }
@@ -40,7 +63,7 @@ std::vector<std::string> get_files_content(std::string directory)
   for (const auto &file : files)
   {
     std::string filename = file.filename().string();
-    std::cout << "[ARCHIVO]: " << filename << std::endl;
+    std::cout << "ARCHIVO: " << filename << std::endl;
 
     std::ifstream read_file(file);
     if (read_file.is_open())
@@ -50,10 +73,10 @@ std::vector<std::string> get_files_content(std::string directory)
 
       // Print file content
       if (file_content.size() > 20)
-        std::cout << "[CONTENIDO]: \n"
+        std::cout << "CONTENIDO: \n"
                   << file_content << "\n\n";
       else
-        std::cout << "[CONTENIDO]: " << file_content << "\n\n";
+        std::cout << "CONTENIDO: " << file_content << "\n\n";
     }
     else
     {

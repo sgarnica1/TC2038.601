@@ -6,7 +6,7 @@
  * occurrence of a pattern in a text. It uses the information about the previous
  * matches to determine where the next match could begin, thus improving the
  * overall performance of the algorithm.
-*/
+ */
 
 #ifndef KMP_H
 #define KMP_H
@@ -19,14 +19,15 @@ void computeLPSArray(char *pat, int M, int *lps);
 void KMPSearch(char *pat, char *txt)
 {
   int M = strlen(pat); // M = length of the pattern
-  int N = strlen(txt); // N = length of the text 
+  int N = strlen(txt); // N = length of the text
   int lps[M];
 
   // Calculate lps[] that will hold the longest prefix suffix
   computeLPSArray(pat, M, lps);
 
-  int txt_index = 0; 
+  int txt_index = 0;
   int pat_index = 0;
+  bool found = false;
   while ((N - txt_index) >= (M - pat_index))
   {
     if (pat[pat_index] == txt[txt_index])
@@ -37,7 +38,9 @@ void KMPSearch(char *pat, char *txt)
 
     if (pat_index == M)
     {
-      std::cout << "Found pattern at index " << txt_index - pat_index << std::endl;
+      std::cout << "(true) Posicion inicial: " << txt_index - pat_index << " ";
+      std::cout << "Posicion final: " << txt_index - 1 << "\n";
+      found = true;
       pat_index = lps[pat_index - 1];
     }
 
@@ -49,6 +52,8 @@ void KMPSearch(char *pat, char *txt)
         txt_index = txt_index + 1;
     }
   }
+  if (!found)
+    std::cout << "(false) Cadena no encontrada en la transmision\n";
 }
 
 /**
@@ -64,7 +69,7 @@ void KMPSearch(char *pat, char *txt)
 void computeLPSArray(char *pat, int M, int *lps)
 {
   int len = 0; // length of the previous longest prefix suffix
-  lps[0] = 0; // LPS = Longest Prefix Suffix Array
+  lps[0] = 0;  // LPS = Longest Prefix Suffix Array
 
   // Loop to calculate lps[i] for i = 1 to M-1
   int i = 1;
