@@ -86,6 +86,18 @@ std::vector<std::string> get_files_content(const std::vector<std::string> &filen
 
 /**
  * @brief
+ * Reverse a string
+ * @param str - String to reverse
+ * @return std::string - Reversed string
+ */
+std::string reverse_string(std::string str)
+{
+  std::reverse(str.begin(), str.end());
+  return str;
+}
+
+/**
+ * @brief
  * Print transmission files label
  * @return void
  */
@@ -110,7 +122,7 @@ void print_mcode_files_label()
 
 /**
  * @brief
- * Print searcc result label
+ * Print search result label
  * @return void
  */
 void print_search_result_label()
@@ -118,6 +130,18 @@ void print_search_result_label()
   std::cout << "\n=======================================================================\n"
             << " RESULTADOS DE BUSQUEDA DE CODIGO MALICIOSO EN ARCHIVOS DE TRANSMISION\n"
             << "=======================================================================\n\n";
+}
+
+/**
+ * @brief
+ * Print reversed search result label
+ * @return void
+ */
+void print_reversed_search_result_label()
+{
+  std::cout << "\n=================================================================================\n"
+            << " RESULTADOS DE BUSQUEDA DE CODIGO MALICIOSO ESPEJEADO EN ARCHIVOS DE TRANSMISION\n"
+            << "=================================================================================\n\n";
 }
 
 /**
@@ -153,9 +177,9 @@ void print_longest_substring(std::string str)
  * @param index - transmission file index
  * @return void
  */
-void print_transmission_file_label(int index)
+void print_transmission_file_label(std::string filename)
 {
-  std::cout << "\nT R A N S M I S S I O N: " << index << "\n\n";
+  std::cout << "\nT R A N S M I S S I O N: " << filename << "\n\n";
 }
 
 /**
@@ -175,9 +199,9 @@ void print_longest_substring_position(int index)
  * @param index - mcode file index
  * @return void
  */
-void print_mcode_file_label(int index)
+void print_mcode_file_label(std::string filename)
 {
-  std::cout << "mcode " << index << "\n";
+  std::cout << "mcode " << filename << "\n";
 }
 
 #endif // UTILS_H

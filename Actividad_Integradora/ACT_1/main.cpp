@@ -31,11 +31,28 @@ int main(int argc, char **argv)
   int mcode_index = 0;
   for (const auto &file : transmission_files)
   {
-    print_transmission_file_label(++transmission_index);
+    print_transmission_file_label(TRANSMISSION_FILES[transmission_index++]);
     for (const auto &mcode : mcode_files)
     {
-      print_mcode_file_label(++mcode_index);
+      print_mcode_file_label(MCODE_FILES[mcode_index++]);
       KMPSearch(const_cast<char *>(mcode.c_str()), const_cast<char *>(file.c_str()));
+      std::cout << std::endl;
+    }
+    mcode_index = 0;
+    std::cout << std::endl;
+  }
+
+  // Verify for reverse mcode in transmission files
+  print_reversed_search_result_label();
+  transmission_index = 0;
+  mcode_index = 0;
+  for (const auto &file : transmission_files)
+  {
+    print_transmission_file_label(TRANSMISSION_FILES[transmission_index++]);
+    for (const auto &mcode : mcode_files)
+    {
+      print_mcode_file_label(MCODE_FILES[mcode_index++]);
+      KMPSearch(const_cast<char *>(reverse_string(mcode).c_str()), const_cast<char *>(file.c_str()));
       std::cout << std::endl;
     }
     mcode_index = 0;
