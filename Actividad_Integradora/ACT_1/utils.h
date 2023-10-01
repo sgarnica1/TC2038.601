@@ -18,9 +18,10 @@
  * @return std::vector<std::filesystem::path> - Vector of filenames
  */
 std::vector<std::filesystem::path> get_filenames(
+    const std::vector<std::string> &filenames_to_search,
     const std::string_view &input_directory)
 {
-  std::vector<std::filesystem::path> filenames;
+  std::vector<std::filesystem::path> found_filenames;
   std::filesystem::path path{input_directory};
 
   if (!std::filesystem::is_directory(path))
@@ -29,32 +30,30 @@ std::vector<std::filesystem::path> get_filenames(
     exit(1);
   }
 
-  for (const auto &entry : std::filesystem::directory_iterator(path))
+  for (const std::string &filename : filenames_to_search)
   {
-    if (entry.path().extension() == ".txt")
-    {
-      filenames.push_back(entry.path());
-    }
+    std::filesystem::path filepath = path / filename;
+    found_filenames.push_back(filepath);
   }
 
-  if (filenames.empty())
+  if (found_filenames.empty())
   {
-    std::cerr << "Error: no input files found in " << input_directory << std::endl;
+    std::cerr << "Error: No valid input files found in " << input_directory << std::endl;
     exit(1);
   }
 
-  return filenames;
+  return found_filenames;
 }
-
 /**
  * @brief
  * Gets the mcode memory array from the mcode files
  * @param files_directory - Directory containing the mcode files
  * @return std::vector<std::string> - Vector of strings containing the mcode memory
  */
-std::vector<std::string> get_files_content(std::string directory)
+std::vector<std::string> get_files_content(const std::vector<std::string> &filenames_to_search,
+                                           const std::string_view &input_directory)
 {
-  auto files = get_filenames(directory);
+  auto files = get_filenames(filenames_to_search, input_directory);
   std::vector<std::string> file_memory;
   for (const auto &file : files)
   {
@@ -76,9 +75,10 @@ std::vector<std::string> get_files_content(std::string directory)
     }
     else
     {
-      std::cerr << "Error: No se pudo abrir el archivo " << filename << std::endl;
-      exit(1);
+      file_memory.push_back("NOT_FOUND");
+      std::cerr << "No se encontro el archivo\n\n";
     }
+
     read_file.close();
   }
   return file_memory;
@@ -156,6 +156,28 @@ void print_longest_substring(std::string str)
 void print_transmission_file_label(int index)
 {
   std::cout << "\nT R A N S M I S S I O N: " << index << "\n\n";
+}
+
+/**
+ * @brief
+ * Print longest substring position
+ * @param index - mcode file index
+ * @return void
+ */
+void print_longest_substring_position(int index)
+{
+  std::cout << "Posiciones en la transmision" << index << ":\n";
+}
+
+/**
+ * @brief
+ * Print mcode file lable
+ * @param index - mcode file index
+ * @return void
+ */
+void print_mcode_file_label(int index)
+{
+  std::cout << "mcode " << index << "\n";
 }
 
 #endif // UTILS_H

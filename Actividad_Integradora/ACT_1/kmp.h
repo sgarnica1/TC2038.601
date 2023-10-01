@@ -52,7 +52,11 @@ void KMPSearch(char *pat, char *txt)
         txt_index = txt_index + 1;
     }
   }
-  if (!found)
+  if (std::string(txt) == "NOT_FOUND")
+    std::cout << "Archivo transmission no valido\n";
+  else if (std::string(pat) == "NOT_FOUND")
+    std::cout << "Archivo mcode no valido\n";
+  else if (!found)
     std::cout << "(false) Cadena no encontrada en la transmision\n";
 }
 

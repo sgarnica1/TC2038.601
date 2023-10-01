@@ -30,7 +30,7 @@ std::string longest_common_substring(std::string str1, std::string str2)
       }
 
   // Construir y devolver la subcadena común más larga
-  if (maxLength == 0)
+  if (maxLength == 0 || (str1 == "NOT_FOUND" && str2 == "NOT_FOUND"))
     return ""; // No hay subcadena común
   else
     return str1.substr(endIndex - maxLength + 1, maxLength);
