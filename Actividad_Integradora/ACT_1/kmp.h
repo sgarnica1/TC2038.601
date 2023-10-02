@@ -6,6 +6,7 @@
  * occurrence of a pattern in a text. It uses the information about the previous
  * matches to determine where the next match could begin, thus improving the
  * overall performance of the algorithm.
+ * @Time Complexity - O(M + N)
  */
 
 #ifndef KMP_H

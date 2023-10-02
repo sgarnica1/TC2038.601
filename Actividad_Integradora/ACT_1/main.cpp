@@ -5,9 +5,9 @@
 #include <algorithm>
 #include <filesystem>
 
-#include "kmp.h"
-#include "longest_common_substring.h"
+#include "longest_common_prefix.h"
 #include "utils.h"
+#include "kmp.h"
 
 namespace fs = std::filesystem;
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
   // Longest substring
   print_longest_substring_label();
-  std::string longest_substring = longest_common_substring(transmission_files[0], transmission_files[1]);
+  std::string longest_substring = longest_common_prefix(transmission_files[0], transmission_files[1]);
   print_longest_substring(longest_substring);
 
   if (!longest_substring.empty() && longest_substring != "NOT_FOUND")
