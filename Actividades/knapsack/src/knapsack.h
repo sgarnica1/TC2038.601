@@ -65,12 +65,16 @@ int knapsack(int max_weight, const std::vector<int> &weights,
   }
 
   // print values
+  std::cout << "Max weight: " << max_weight << "\n\n";
   std::cout << "Values: ";
   for (int i = 0; i < num_items; ++i)
-  {
     std::cout << values[i] << " ";
-  }
   std::cout << std::endl;
+
+  std::cout << "Weights: ";
+  for (int i = 0; i < num_items; ++i)
+    std::cout << weights[i] << " ";
+  std::cout << "\n\n";
 
   // Print the dynamic programming matrix
   for (int i = 0; i < num_items; ++i)
