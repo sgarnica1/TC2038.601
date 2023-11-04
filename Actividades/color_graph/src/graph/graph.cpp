@@ -12,10 +12,10 @@
 Graph::Graph(const std::int32_t &vertices)
     : m_vertices(vertices)
 {
-    m_adjacency_list.resize(m_vertices);
-    m_color_assigned.resize(m_vertices);
+  m_adjacency_list.resize(m_vertices);
+  m_color_assigned.resize(m_vertices);
 
-    m_color_assigned.reserve(m_vertices);
+  m_color_assigned.reserve(m_vertices);
 }
 
 // Methods
@@ -27,11 +27,11 @@ Graph::Graph(const std::int32_t &vertices)
  */
 void Graph::add_edge(const std::int32_t &vertex, const std::int32_t &weight)
 {
-    if (vertex >= m_vertices || weight >= m_vertices)
-        throw std::out_of_range("Vertex is out of range");
+  if (vertex >= m_vertices || weight >= m_vertices)
+    throw std::out_of_range("Vertex is out of range");
 
-    m_adjacency_list[vertex].emplace_back(weight);
-    m_adjacency_list[weight].emplace_back(vertex);
+  m_adjacency_list[vertex].emplace_back(weight);
+  m_adjacency_list[weight].emplace_back(vertex);
 }
 
 /**
@@ -41,29 +41,29 @@ void Graph::add_edge(const std::int32_t &vertex, const std::int32_t &weight)
  */
 std::optional<std::string> Graph::color_graph()
 {
-    m_color_assigned.assign(m_vertices, -1);
-    m_color_assigned[0] = 0;
+  m_color_assigned.assign(m_vertices, -1);
+  m_color_assigned[0] = 0;
 
-    for (int u = 1; u < m_vertices; u++)
-    {
-        std::vector<bool> available(m_vertices, true);
+  for (int u = 1; u < m_vertices; u++)
+  {
+    std::vector<bool> available(m_vertices, true);
 
-        for (int index = 0; index < m_vertices; index++)
-            if (m_color_assigned[index] != -1)
-                available[m_color_assigned[index]] = false;
+    for (int v : m_adjacency_list[u])
+      if (m_color_assigned[v] != -1)
+        available[m_color_assigned[v]] = false;
 
-        int color;
-        for (color = 0; color < m_vertices; color++)
-            if (available[color])
-                break;
+    int color;
+    for (color = 0; color < m_vertices; color++)
+      if (available[color])
+        break;
 
-        if (color == m_vertices)
-            return "No es posible  asignar colores a los nodos";
+    if (color == m_vertices)
+      return "No es posible  asignar colores a los nodos";
 
-        m_color_assigned[u] = color;
-    }
+    m_color_assigned[u] = color;
+  }
 
-    return std::nullopt;
+  return std::nullopt;
 }
 
 /**
@@ -72,34 +72,45 @@ std::optional<std::string> Graph::color_graph()
  */
 std::string Graph::print_solution()
 {
-    std::stringstream ss;
-    auto result = color_graph();
+  std::stringstream ss;
+  auto result = color_graph();
 
-    if (result.has_value())
-        ss << "Error: " << result.value() << std::endl;
+  if (result.has_value())
+    ss << "Error: " << result.value() << std::endl;
 
-    else
+  else
+  {
+    ss << "Graph" << std::endl;
+    ss << "-------------------------" << std::endl;
+
+    for (int i = 0; i < m_vertices; i++)
     {
-        ss << "Graph Coloring Solution:" << std::endl;
-        ss << "-------------------------" << std::endl;
-
-        for (int u = 0; u < m_vertices; u++)
-        {
-            int color_index = m_color_assigned[u] % terminal_colors.size();
-            const char *color_code = terminal_colors[color_index];
-
-            ss << "Vertex " << u << " --> Color Code: "
-               << color_code << " (" << terminal_colors[color_index] << ")"
-               << COLOR_RESET << std::endl;
-        }
-
-        ss << "-------------------------" << std::endl;
-
-        int max_color_index = *std::max_element(
-            m_color_assigned.begin(), m_color_assigned.end());
-
-        ss << "Number of colors used: " << max_color_index + 1 << std::endl;
+      ss << i << " --> ";
+      for (int v : m_adjacency_list[i])
+        ss << v << " ";
+      ss << std::endl;
     }
 
-    return ss.str();
+    ss << "\nGraph Coloring Solution:" << std::endl;
+    ss << "-------------------------" << std::endl;
+
+    for (int u = 0; u < m_vertices; u++)
+    {
+      int color_index = m_color_assigned[u] % terminal_colors.size();
+      const char *color_code = terminal_colors[color_index];
+
+      ss << "Vertex " << u << " --> Color Code: "
+         << color_code << " (" << terminal_colors[color_index] << ")"
+         << COLOR_RESET << std::endl;
+    }
+
+    ss << "-------------------------" << std::endl;
+
+    int max_color_index = *std::max_element(
+        m_color_assigned.begin(), m_color_assigned.end());
+
+    ss << "Number of colors used: " << max_color_index + 1 << std::endl;
+  }
+
+  return ss.str();
 }
