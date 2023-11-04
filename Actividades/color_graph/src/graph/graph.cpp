@@ -38,6 +38,7 @@ void Graph::add_edge(const std::int32_t &vertex, const std::int32_t &weight)
  * @brief Colors the graph
  * @details This function colors the graph using the greedy algorithm
  * @return std::optional<std::string> Returns the solution if it exists
+ * @timecomplexity O(N^2)
  */
 std::optional<std::string> Graph::color_graph()
 {
