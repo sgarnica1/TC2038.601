@@ -69,8 +69,11 @@ void Graph::addEdge(int from, int to, int weight)
  * If the graph is not connected, the algorithm will only find a spanning tree
  * for one of the connected components.
  *
- * @note The algorithm runs in O(V^2) time, where V is the number of vertices.
- * @note The algorithm runs in O(V) space, where V is the number of vertices.
+ * @note The algorithm runs in O((V + E) log(V)) time, where V is the number
+ *       of vertices and E is the number of edges.
+ * @note The algorithm runs in O(V) space due to the storage of the `key`,
+ *       `parent`, and `inMST` arrays, which all have a size proportional to
+ *        the number of vertices
  */
 void Graph::findOptimalCabling()
 {
@@ -83,27 +86,40 @@ void Graph::findOptimalCabling()
   std::vector<int> parent(numVertices, -1);
   std::vector<bool> inMST(numVertices, false);
 
-  key[0] = 0;
-  minHeap.push(std::make_pair(0, 0));
-
-  while (!minHeap.empty())
+  for (int i = 0; i < numVertices; ++i)
   {
-    int u = minHeap.top().second;
-    minHeap.pop();
+    key[i] = std::numeric_limits<int>::max();
+    parent[i] = -1;
+  }
 
-    if (inMST[u])
-      continue;
-
-    inMST[u] = true;
-
-    for (int v = 0; v < numVertices; v++)
+  for (int i = 0; i < numVertices; ++i)
+  {
+    if (!inMST[i])
     {
-      if (adjacencyMatrix[u][v] && !inMST[v] && adjacencyMatrix[u][v] < key[v])
-      {
-        parent[v] = u;
-        key[v] = adjacencyMatrix[u][v];
+      key[i] = 0;
+      minHeap.push(std::make_pair(0, i));
 
-        minHeap.push(std::make_pair(key[v], v));
+      while (!minHeap.empty())
+      {
+        int u = minHeap.top().second;
+        minHeap.pop();
+
+        if (inMST[u])
+          continue;
+
+        inMST[u] = true;
+
+        for (int v = 0; v < numVertices; v++)
+        {
+          if (adjacencyMatrix[u][v] && !inMST[v] &&
+              adjacencyMatrix[u][v] < key[v])
+          {
+            parent[v] = u;
+            key[v] = adjacencyMatrix[u][v];
+
+            minHeap.push(std::make_pair(key[v], v));
+          }
+        }
       }
     }
   }
@@ -112,7 +128,8 @@ void Graph::findOptimalCabling()
 }
 
 /**
- * @brief Prints the MST in an adjacency matrix format
+ * @brief Prints a representation of the Minimum Spanning Tree (MST) found
+ * using Prim's algorithm. The MST is printed as an adjacency matrix.
  *
  * @param[in] parent Array containing the parent of each vertex
  */
