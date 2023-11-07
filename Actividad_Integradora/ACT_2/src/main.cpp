@@ -46,5 +46,6 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  graph.value().toString();
+  graph.value().findOptimalCabling();
+  return EXIT_SUCCESS;
 }

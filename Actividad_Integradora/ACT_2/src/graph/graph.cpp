@@ -12,6 +12,8 @@
  */
 
 #include <sstream>
+#include <limits>
+#include <set>
 
 #include "graph.h"
 #include "../utils/logger/logger.h"
@@ -37,35 +39,96 @@ Graph::Graph(int numVertices) : numVertices(numVertices)
 void Graph::addEdge(int from, int to, int weight)
 {
   if (from >= 0 && from < numVertices && to >= 0 && to < numVertices)
-  {
     adjacencyMatrix[from][to] = weight;
-    LOG_INFO("Edge added from " + std::to_string(from) +
-             " to " + std::to_string(to) + " with weight " +
-             std::to_string(weight));
-  }
 
   else
-  {
     LOG_ERROR("Attempted to add edge with invalid vertices or weight");
-  }
 }
 
 /**
- * @brief Prints the graph in a string format
+ * @brief Constructs the Minimum Spanning Tree (MST) of the graph using
+ * Prim's algorithm.
+ *
+ * @details This methods applies Prim's algorithm to find the MST of the graph
+ * represented by the adjacency matrix. The MST is a subset of the edges
+ * that connects all the vertices together, without any cycles and with
+ * the minimum possible total edge weight. This is used to determine
+ * the most efficient way to lay out cabling with the least amount of fiber
+ * optic cable needed to connect all colonies (nodes).
+ *
+ * @details The function initializes all key values to infinity and sets the
+ * first key to zero to ensure it is picked first. Then, it proceeds to add
+ * edges of the MST by picking the smallest weight edge from the set of edges
+ * that connect the current MST to vertices not yet included in the MST.
+ *
+ * @details After the algorithm completes, the `parent` array will represent
+ * the MST. The edges of the MST are then logged, showing the connections
+ * and their corresponding weights.
+ *
+ * @note The graph must be connected for Prim's algorithm to find a valid MST.
+ * If the graph is not connected, the algorithm will only find a spanning tree
+ * for one of the connected components.
+ *
+ * @note The algorithm runs in O(V^2) time, where V is the number of vertices.
+ * @note The algorithm runs in O(V) space, where V is the number of vertices.
  */
-void Graph::toString() const
+void Graph::findOptimalCabling()
 {
-  std::stringstream ss;
+  std::vector<int> key(numVertices, std::numeric_limits<int>::max());
+  std::vector<int> parent(numVertices, -1);
+  std::set<int> notInMST;
 
-  ss << "Graph generated from file: " << std::endl;
+  for (int i = 0; i < numVertices; i++)
+    notInMST.insert(i);
 
+  key[0] = 0;
+
+  while (!notInMST.empty())
+  {
+    int u = *notInMST.begin();
+    for (int v : notInMST)
+      if (key[v] < key[u])
+        u = v;
+
+    notInMST.erase(u);
+
+    for (int v = 0; v < numVertices; v++)
+    {
+      if (adjacencyMatrix[u][v] != 0 && notInMST.count(v) &&
+          adjacencyMatrix[u][v] < key[v])
+      {
+        parent[v] = u;
+        key[v] = adjacencyMatrix[u][v];
+      }
+    }
+  }
+
+  printOptimalCabling(parent);
+}
+
+/**
+ * @brief Prints the MST in an adjacency matrix format
+ *
+ * @param[in] parent Array containing the parent of each vertex
+ */
+void Graph::printOptimalCabling(const std::vector<int> &parent)
+{
+  std::vector<std::vector<int>> mstAdjacencyMatrix(
+      numVertices,
+      std::vector<int>(numVertices, 0));
+
+  for (int i = 1; i < numVertices; i++)
+  {
+    mstAdjacencyMatrix[parent[i]][i] = adjacencyMatrix[i][parent[i]];
+    mstAdjacencyMatrix[i][parent[i]] = adjacencyMatrix[i][parent[i]];
+  }
+
+  LOG_INFO("Minimum Spanning Tree (MST) found using Prim's algorithm: ");
   for (int i = 0; i < numVertices; i++)
   {
     for (int j = 0; j < numVertices; j++)
-      ss << adjacencyMatrix[i][j] << " ";
+      std::cout << mstAdjacencyMatrix[i][j] << " ";
 
-    ss << std::endl;
+    std::cout << std::endl;
   }
-
-  LOG_INFO(ss.str());
 }

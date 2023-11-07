@@ -34,14 +34,13 @@ public:
   void addEdge(int from, int to, int weight);
 
   void findOptimalCabling();
-  void printOptimalCabling();
+  void printOptimalCabling(const std::vector<int> &parent);
   void findShortestRoute();
   void printShortestRoute();
   void setTransmissionCapacities(std::vector<std::vector<int>> &capacities);
   int findMaxFlow(int source, int sink);
   void printMaxFlow();
   void printAdjacencyMatrix();
-  void toString() const;
 
 private:
   int numVertices;
