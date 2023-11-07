@@ -13,7 +13,7 @@
 
 #include <sstream>
 #include <limits>
-#include <set>
+#include <queue>
 
 #include "graph.h"
 #include "../utils/logger/logger.h"
@@ -74,31 +74,36 @@ void Graph::addEdge(int from, int to, int weight)
  */
 void Graph::findOptimalCabling()
 {
+  std::priority_queue<std::pair<int, int>,
+                      std::vector<std::pair<int, int>>,
+                      std::greater<std::pair<int, int>>>
+      minHeap;
+
   std::vector<int> key(numVertices, std::numeric_limits<int>::max());
   std::vector<int> parent(numVertices, -1);
-  std::set<int> notInMST;
-
-  for (int i = 0; i < numVertices; i++)
-    notInMST.insert(i);
+  std::vector<bool> inMST(numVertices, false);
 
   key[0] = 0;
+  minHeap.push(std::make_pair(0, 0));
 
-  while (!notInMST.empty())
+  while (!minHeap.empty())
   {
-    int u = *notInMST.begin();
-    for (int v : notInMST)
-      if (key[v] < key[u])
-        u = v;
+    int u = minHeap.top().second;
+    minHeap.pop();
 
-    notInMST.erase(u);
+    if (inMST[u])
+      continue;
+
+    inMST[u] = true;
 
     for (int v = 0; v < numVertices; v++)
     {
-      if (adjacencyMatrix[u][v] != 0 && notInMST.count(v) &&
-          adjacencyMatrix[u][v] < key[v])
+      if (adjacencyMatrix[u][v] && !inMST[v] && adjacencyMatrix[u][v] < key[v])
       {
         parent[v] = u;
         key[v] = adjacencyMatrix[u][v];
+
+        minHeap.push(std::make_pair(key[v], v));
       }
     }
   }
@@ -113,22 +118,22 @@ void Graph::findOptimalCabling()
  */
 void Graph::printOptimalCabling(const std::vector<int> &parent)
 {
-  std::vector<std::vector<int>> mstAdjacencyMatrix(
-      numVertices,
-      std::vector<int>(numVertices, 0));
+  std::ostringstream oss;
+  oss << "Minimum Spanning Tree (MST) found using Prim's algorithm:\n";
 
-  for (int i = 1; i < numVertices; i++)
-  {
-    mstAdjacencyMatrix[parent[i]][i] = adjacencyMatrix[i][parent[i]];
-    mstAdjacencyMatrix[i][parent[i]] = adjacencyMatrix[i][parent[i]];
-  }
-
-  LOG_INFO("Minimum Spanning Tree (MST) found using Prim's algorithm: ");
   for (int i = 0; i < numVertices; i++)
   {
     for (int j = 0; j < numVertices; j++)
-      std::cout << mstAdjacencyMatrix[i][j] << " ";
+    {
+      int weight = (j == parent[i] || i == parent[j])
+                       ? adjacencyMatrix[i][j]
+                       : 0;
 
-    std::cout << std::endl;
+      oss << weight << " ";
+    }
+
+    oss << std::endl;
   }
+
+  std::cout << oss.str();
 }
