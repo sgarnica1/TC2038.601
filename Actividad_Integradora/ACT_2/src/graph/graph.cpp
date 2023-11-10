@@ -14,7 +14,7 @@
 #include <sstream>
 #include <limits>
 #include <queue>
-
+#include <algorithm>
 #include "graph.h"
 #include "../utils/logger/logger.h"
 
@@ -48,6 +48,11 @@ void Graph::addEdge(int from, int to, int weight)
 /**
  * @brief Constructs the Minimum Spanning Tree (MST) of the graph using
  * Prim's algorithm.
+ *
+ * @details A minimum spanning tree (MST) is a subset of the edges of a connected,
+ * edge-weighted graph that connects all the vertices together without any cycles
+ * and with the minimum possible total edge weight. It is a way of finding the most
+ * economical way to connect a set of vertices.
  *
  * @details This methods applies Prim's algorithm to find the MST of the graph
  * represented by the adjacency matrix. The MST is a subset of the edges
@@ -163,5 +168,37 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
 int Graph::findMaxFlow(int source, int sink)
 {
   std::cout << "\nFinding max flow...\n";
+  bfs();
   return 1;
+}
+
+/**
+ * @brief BFS algorithm to find the shortest route from the source to the sink.
+ * @param[in] source Source vertex
+ * @param[in] sink Destination vertex
+ * @param[in] parent Array containing the parent of each vertex
+ */
+
+void Graph::bfs()
+{
+  std::queue<int> q;
+  std::vector<int> visited;
+  int source = 0;
+  int sink = numVertices - 1;
+
+  q.push(source);
+  visited.push_back(source);
+
+  while (q.size() > 0)
+  {
+    int n = q.front();
+    q.pop();
+
+    for (int i = 0; i < numVertices; i++)
+      if (adjacencyMatrix[n][i] != 0 && visited.end() == std::find(visited.begin(), visited.end(), i))
+      {
+        q.push(i);
+        visited.push_back(i);
+      }
+  }
 }

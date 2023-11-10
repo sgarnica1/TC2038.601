@@ -44,8 +44,12 @@ public:
 
 private:
   int numVertices;
+  int maxFlow;
   std::vector<std::vector<int>> adjacencyMatrix;
   std::vector<std::vector<int>> transmissionCapacities;
+
+  void bfs();
+  void bfs(int source, int sink, std::vector<int> &parent);
 };
 
 #endif
