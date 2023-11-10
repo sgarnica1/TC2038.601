@@ -39,13 +39,17 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  auto graph = readGraphFromFile(argv[1]);
-  if (!graph.has_value())
+  auto graphs = readGraphFromFile(argv[1]);
+  if (!graphs.has_value())
   {
     LOG_ERROR("Error reading graph from file");
     return EXIT_FAILURE;
   }
 
-  graph.value().findOptimalCabling();
+  // Find optimal caling
+  graphs.value().first.findOptimalCabling();
+
+  // Find max flow
+  graphs.value().second.findMaxFlow(1, 1);
   return EXIT_SUCCESS;
 }

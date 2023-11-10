@@ -36,52 +36,69 @@
  *
  * @param[in] filepath The filesystem path to the file containing
  *                     the graph data.
- * @return std::optional<Graph> An optional containing the constructed Graph
+ * @return std::optional<std::pair<Graph, Graph>> An optional containing the constructed Graph
  *         object if the file was read successfully, or std::nullopt if the
  *         file could not be read or parsed.
  *
  * @note Time complexity: O(V^2) where V is the number of vertices
  * @note Space complexity: O(V^2) where V is the number of vertices
  */
-[[nodiscard]] std::optional<Graph>
+[[nodiscard]] std::optional<std::pair<Graph, Graph>>
 readGraphFromFile(const std::filesystem::path &filepath)
 {
-    std::ifstream file(filepath, std::ios::in | std::ios::binary);
-    if (!file.is_open())
-    {
-        LOG_ERROR("Error opening file: " + filepath.string());
-        return std::nullopt;
-    }
+  std::ifstream file(filepath, std::ios::in | std::ios::binary);
+  if (!file.is_open())
+  {
+    LOG_ERROR("Error opening file: " + filepath.string());
+    return std::nullopt;
+  }
 
-    if (file.peek() == std::ifstream::traits_type::eof())
+  if (file.peek() == std::ifstream::traits_type::eof())
+  {
+    LOG_ERROR("Error parsing file: " + filepath.string());
+    return std::nullopt;
+  }
+
+  std::stringstream ss;
+  ss << file.rdbuf();
+
+  int numVertices;
+  ss >> numVertices;
+
+  Graph graph1(numVertices);
+  Graph graph2(numVertices);
+
+  for (int i = 0; i < numVertices; ++i)
+  {
+    for (int j = 0; j < numVertices; ++j)
     {
+      int distance;
+      if (!(ss >> distance))
+      {
         LOG_ERROR("Error parsing file: " + filepath.string());
         return std::nullopt;
+      }
+
+      if (i != j)
+        graph1.addEdge(i, j, distance);
     }
+  }
 
-    std::stringstream ss;
-    ss << file.rdbuf();
-
-    int numVertices;
-    ss >> numVertices;
-
-    Graph graph(numVertices);
-
-    for (int i = 0; i < numVertices; ++i)
+  for (int i = 0; i < numVertices; ++i)
+  {
+    for (int j = 0; j < numVertices; ++j)
     {
-        for (int j = 0; j < numVertices; ++j)
-        {
-            int distance;
-            if (!(ss >> distance))
-            {
-                LOG_ERROR("Error parsing file: " + filepath.string());
-                return std::nullopt;
-            }
+      int distance;
+      if (!(ss >> distance))
+      {
+        LOG_ERROR("Error parsing file: " + filepath.string());
+        return std::nullopt;
+      }
 
-            if (i != j)
-                graph.addEdge(i, j, distance);
-        }
+      if (i != j)
+        graph2.addEdge(i, j, distance);
     }
+  }
 
-    return graph;
+  return std::make_pair(graph1, graph2);
 }

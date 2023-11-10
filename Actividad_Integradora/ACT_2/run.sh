@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Check if an input file was provided
 if [ "$#" -ne 1 ]; then
@@ -12,7 +12,7 @@ g++ -std=c++20 src/main.cpp src/utils/logger/logger.cpp src/graph/graph.cpp -o b
 # Check if the compilation was successful
 if [ $? -eq 0 ]; then
     # Run the program with the input file
-    ./bin/main "$1"
+    vx "$1"
 else
     echo "Compilation failed."
     exit 1

@@ -154,3 +154,14 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
 
   std::cout << oss.str();
 }
+
+/**
+ * @brief Finds the maximun flow from the first node to the last one.
+ *
+ * @return int Max flow
+ */
+int Graph::findMaxFlow(int source, int sink)
+{
+  std::cout << "\nFinding max flow...\n";
+  return 1;
+}
