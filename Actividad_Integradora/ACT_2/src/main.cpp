@@ -50,6 +50,6 @@ int main(int argc, char **argv)
   graphs.value().first.findOptimalCabling();
 
   // Find max flow
-  graphs.value().second.findMaxFlow(1, 1);
+  graphs.value().second.findMaxFlow();
   return EXIT_SUCCESS;
 }

@@ -14,7 +14,6 @@
 #include <sstream>
 #include <limits>
 #include <queue>
-#include <algorithm>
 #include "graph.h"
 #include "../utils/logger/logger.h"
 
@@ -165,10 +164,17 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
  *
  * @return int Max flow
  */
-int Graph::findMaxFlow(int source, int sink)
+int Graph::findMaxFlow()
 {
   std::cout << "\nFinding max flow...\n";
-  bfs();
+
+  int source = 0;
+  int sink = numVertices - 1;
+  std::vector<int> parent(numVertices, -1);
+
+  bfs(source, sink, parent);
+
+  printMaxFlow(source, sink, parent);
   return 1;
 }
 
@@ -179,26 +185,52 @@ int Graph::findMaxFlow(int source, int sink)
  * @param[in] parent Array containing the parent of each vertex
  */
 
-void Graph::bfs()
+void Graph::bfs(int source, int sink, std::vector<int> &parent)
 {
   std::queue<int> q;
-  std::vector<int> visited;
-  int source = 0;
-  int sink = numVertices - 1;
+  std::vector<bool> visited(numVertices, false);
 
   q.push(source);
-  visited.push_back(source);
+  visited[source] = true;
 
   while (q.size() > 0)
   {
-    int n = q.front();
+    int current = q.front();
     q.pop();
 
     for (int i = 0; i < numVertices; i++)
-      if (adjacencyMatrix[n][i] != 0 && visited.end() == std::find(visited.begin(), visited.end(), i))
+      if (adjacencyMatrix[current][i] != 0 && !visited[i])
       {
         q.push(i);
-        visited.push_back(i);
+        visited[i] = true;
+        parent[i] = current;
+        std::cout << parent[i] << " ";
       }
   }
+}
+
+/**
+ * @detils Print Max Flow
+ * @param[in] source Source vertex
+ * @param[in] sink Destination vertex
+ * @param[in] parent Array containing the parent of each vertex
+ */
+
+void Graph::printMaxFlow(int source, int sink, std::vector<int> &parent)
+{
+  std::vector<int> path;
+
+  // Reconstruct the path by following the parent chain from destination to source
+  for (int v = sink; v != source; v = parent[v])
+    path.push_back(v);
+
+  // Add the source vertex to the path
+  path.push_back(source);
+
+  // Print the path in reverse order (from source to destination)
+  std::cout << "Shortest Path: ";
+  for (auto it = path.rbegin(); it != path.rend(); ++it)
+    std::cout << *it << " ";
+
+  std::cout << std::endl;
 }
