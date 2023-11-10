@@ -204,7 +204,6 @@ void Graph::bfs(int source, int sink, std::vector<int> &parent)
         q.push(i);
         visited[i] = true;
         parent[i] = current;
-        std::cout << parent[i] << " ";
       }
   }
 }
