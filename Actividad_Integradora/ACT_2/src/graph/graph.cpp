@@ -166,79 +166,16 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
  */
 int Graph::findMaxFlow()
 {
-  std::cout << "\nFinding max flow...\n";
-
+  int maxFlow = 0;
   int source = 0;
   int sink = numVertices - 1;
   std::vector<int> parent(numVertices, -1);
-
-  bfs(source, sink, parent);
-
-  // printMaxFlow(source, sink, parent);
-  return 1;
-}
-
-/**
- * @brief BFS algorithm to find the shortest route from the source to the sink.
- * @param[in] source Source vertex
- * @param[in] sink Destination vertex
- * @param[in] parent Array containing the parent of each vertex
- */
-
-void Graph::bfs(int source, int sink, std::vector<int> &parent)
-{
-  std::queue<int> q;
-  std::vector<int> path;
-  std::vector<bool> visited(numVertices, false);
-  int maxFlow = 0;
   transmissionCapacities = adjacencyMatrix;
-  bool flowFound = true;
 
-  // print transmission capacities
-  std::cout << "Transmission capacities: " << std::endl;
-  for (int i = 0; i < numVertices; i++)
+  while (bfs(source, sink, parent))
   {
-    for (int j = 0; j < numVertices; j++)
-    {
-      std::cout << transmissionCapacities[i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  while (flowFound)
-  {
-    flowFound = false;
-    q.push(source);
-    visited[source] = true;
-
-    std::cout << "Here1\n";
-
-    while (q.size() > 0)
-    {
-      int current = q.front();
-      std::cout << "Current: " << current << std::endl;
-      q.pop();
-
-      std::cout << "Here2\n";
-
-      for (int i = 0; i < numVertices; i++)
-        if (transmissionCapacities[current][i] > 0 && !visited[i])
-        {
-          std::cout << "Here3\n";
-          q.push(i);
-          visited[i] = true;
-          parent[i] = current;
-
-          if (i == sink)
-          {
-            flowFound = true;
-            break;
-          }
-        }
-    }
-    std::cout << "Here4\n";
-
-    // Reconstruct the path by following the parent chain from destination to source
+    std::vector<int> path;
+    // Reconstruct the path by following the parent chain from destination to source }
     for (int v = sink; v != source; v = parent[v])
       path.push_back(v);
 
@@ -261,56 +198,52 @@ void Graph::bfs(int source, int sink, std::vector<int> &parent)
       if (*it != sink)
         transmissionCapacities[*it][*(it + 1)] -= minCapacity;
 
-    // print transmission capacities
-    std::cout << "Transmission capacities: " << std::endl;
-    for (int i = 0; i < numVertices; i++)
-    {
-      for (int j = 0; j < numVertices; j++)
-      {
-        std::cout << transmissionCapacities[i][j] << " ";
-      }
-      std::cout << std::endl;
-    }
-
-    // Clear the path and visited array
     path.clear();
-    visited.clear();
+  }
+  std::cout << "Max flow: " << maxFlow << std::endl;
+  return 1;
+}
 
-    // Reset the visited array
-    visited.resize(numVertices, false);
+/**
+ * @brief BFS algorithm to find the shortest route from the source to the sink.
+ * @param[in] source Source vertex
+ * @param[in] sink Destination vertex
+ * @param[in] parent Array containing the parent of each vertex
+ * @return bool True if a path is found to the sink, false otherwise
+ */
+
+bool Graph::bfs(int source, int sink, std::vector<int> &parent)
+{
+  std::queue<int> q;
+  std::vector<bool> visited(numVertices, false);
+
+  q.push(source);
+  visited[source] = true;
+
+  while (!q.empty())
+  {
+    int current = q.front();
+    q.pop();
+
+    for (int next = 0; next < numVertices; next++)
+      if (transmissionCapacities[current][next] > 0 && !visited[next])
+      {
+        q.push(next);
+        visited[next] = true;
+        parent[next] = current;
+
+        if (next == sink)
+        {
+          // Clear the visited array
+          visited.clear();
+          visited.resize(numVertices, false);
+          return true;
+        }
+      }
   }
 
-  std::cout << "Max flow: " << maxFlow << std::endl;
+  return false;
 }
-// /**
-//  * @brief BFS algorithm to find the shortest route from the source to the sink.
-//  * @param[in] source Source vertex
-//  * @param[in] sink Destination vertex
-//  * @param[in] parent Array containing the parent of each vertex
-//  */
-
-// void Graph::bfs(int source, int sink, std::vector<int> &parent)
-// {
-//   std::queue<int> q;
-//   std::vector<bool> visited(numVertices, false);
-
-//   q.push(source);
-//   visited[source] = true;
-
-//   while (q.size() > 0)
-//   {
-//     int current = q.front();
-//     q.pop();
-
-//     for (int i = 0; i < numVertices; i++)
-//       if (adjacencyMatrix[current][i] != 0 && !visited[i])
-//       {
-//         q.push(i);
-//         visited[i] = true;
-//         parent[i] = current;
-//       }
-//   }
-// }
 
 /**
  * @detils Print Max Flow

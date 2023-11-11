@@ -48,7 +48,7 @@ private:
   std::vector<std::vector<int>> adjacencyMatrix;
   std::vector<std::vector<int>> transmissionCapacities;
 
-  void bfs(int source, int sink, std::vector<int> &parent);
+  bool bfs(int source, int sink, std::vector<int> &parent);
 };
 
 #endif
