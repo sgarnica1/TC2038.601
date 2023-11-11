@@ -166,39 +166,30 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
  */
 int Graph::findMaxFlow()
 {
-  int maxFlow = 0;
-  int source = 0;
-  int sink = numVertices - 1;
+  int maxFlow = 0, source = 0, sink = numVertices - 1;
   std::vector<int> parent(numVertices, -1);
   transmissionCapacities = adjacencyMatrix;
 
   while (bfs(source, sink, parent))
   {
-    std::vector<int> path;
-    // Reconstruct the path by following the parent chain from destination to source }
-    for (int v = sink; v != source; v = parent[v])
-      path.push_back(v);
-
-    // Add the source vertex to the path
-    path.push_back(source);
-
+    int current = sink;
+    int minCapacity = std::numeric_limits<int>::max();
     std::vector<int> capacities;
+    while (current != source)
+    {
+      minCapacity = std::min(minCapacity, transmissionCapacities[parent[current]][current]);
+      current = parent[current];
+    }
 
-    // Find the transmission capacities of the edges in the path
-    for (auto it = path.rbegin(); it != path.rend(); ++it)
-      if (*it != sink)
-        capacities.push_back(transmissionCapacities[*it][*(it + 1)]);
-
-    // Find the minimum transmission capacity in the path
-    int minCapacity = *std::min_element(capacities.begin(), capacities.end());
     maxFlow += minCapacity;
 
-    // Update the transmission capacities of the edges in the path
-    for (auto it = path.rbegin(); it != path.rend(); ++it)
-      if (*it != sink)
-        transmissionCapacities[*it][*(it + 1)] -= minCapacity;
+    current = sink;
+    while (current != source)
+    {
+      transmissionCapacities[parent[current]][current] -= minCapacity;
+      current = parent[current];
+    }
 
-    path.clear();
   }
   std::cout << "Max flow: " << maxFlow << std::endl;
   return 1;
