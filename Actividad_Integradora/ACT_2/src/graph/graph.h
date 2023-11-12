@@ -38,8 +38,8 @@ public:
   void findShortestRoute();
   void printShortestRoute();
   void setTransmissionCapacities(std::vector<std::vector<int>> &capacities);
-  int findMaxFlow();
-  void printMaxFlow(int source, int sink, std::vector<int> &parent);
+  void findMaxFlow();
+  void printMaxFlow(int maxFlow, int source, int sink);
   void printAdjacencyMatrix();
 
 private:

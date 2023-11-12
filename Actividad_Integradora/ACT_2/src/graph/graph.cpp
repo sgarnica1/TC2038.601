@@ -160,11 +160,28 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
 }
 
 /**
- * @brief Finds the maximun flow from the first node to the last one.
+ * @brief Finds the maximun flow from the first node (source) to the last one (sink)
+ * using the Edmonds-Karp implementation of the Ford-Fulkerson algorithm.
+ *
+ * @details This algorithm finds the maximum flow from the source to the sink by
+ * finding the shortest path from the source to the sink using BFS (Breatdth First
+ * Search), instead of DFS (Depth First Search) as the Ford-Fulkerson algorithm does.
+ * This is done by finding the shortest path * from the source to the sink, finding
+ * the minimum capacity of the edges in the path, and then updating the flow of each
+ * edge in the path, until there are no more paths from the source to the sink. The
+ * maximum flow is the sum of the flow of all the paths from the source to the sink.
+ *
+ * @note The algorithm runs in O(V * E^2) time, where V is the number of vertices
+ * and E is the number of edges.
+ *
+ * @note The algorithm runs in O(V^2) space dut to the storage of the adjacency
+ * matrix (transmissionCapacities), which requires O(V^2) space. Additionally, the
+ * space required for the queue in the BFS step is O(V), and the space for the parent
+ * array is O(V). Therefore, the overall space complexity is O(V^2).
  *
  * @return int Max flow
  */
-int Graph::findMaxFlow()
+void Graph::findMaxFlow()
 {
   int maxFlow = 0, source = 0, sink = numVertices - 1;
   std::vector<int> parent(numVertices, -1);
@@ -175,6 +192,8 @@ int Graph::findMaxFlow()
     int current = sink;
     int minCapacity = std::numeric_limits<int>::max();
     std::vector<int> capacities;
+
+    // Find the minimum capacity of the edges in the path while traversing the shortest path
     while (current != source)
     {
       minCapacity = std::min(minCapacity, transmissionCapacities[parent[current]][current]);
@@ -184,15 +203,16 @@ int Graph::findMaxFlow()
     maxFlow += minCapacity;
 
     current = sink;
+    // Update the flow of each edge in the path
     while (current != source)
     {
       transmissionCapacities[parent[current]][current] -= minCapacity;
+      transmissionCapacities[current][parent[current]] += minCapacity; // Update reverse edge
       current = parent[current];
     }
-
   }
-  std::cout << "Max flow: " << maxFlow << std::endl;
-  return 1;
+
+  printMaxFlow(maxFlow, source, sink);
 }
 
 /**
@@ -201,6 +221,9 @@ int Graph::findMaxFlow()
  * @param[in] sink Destination vertex
  * @param[in] parent Array containing the parent of each vertex
  * @return bool True if a path is found to the sink, false otherwise
+ *
+ * @timecomplexity O(V * E)
+ * @spacecomplexity O(V)
  */
 
 bool Graph::bfs(int source, int sink, std::vector<int> &parent)
@@ -225,9 +248,8 @@ bool Graph::bfs(int source, int sink, std::vector<int> &parent)
 
         if (next == sink)
         {
-          // Clear the visited array
-          visited.clear();
-          visited.resize(numVertices, false);
+          // Reset the visited array for the next BFS iteration
+          std::fill(visited.begin(), visited.end(), false);
           return true;
         }
       }
@@ -243,21 +265,25 @@ bool Graph::bfs(int source, int sink, std::vector<int> &parent)
  * @param[in] parent Array containing the parent of each vertex
  */
 
-void Graph::printMaxFlow(int source, int sink, std::vector<int> &parent)
+void Graph::printMaxFlow(int maxFlow, int source, int sink)
 {
-  std::vector<int> path;
+  std::cout << "\nMax Flow found using Edmmonds-Karp algorithm:\n";
+  std::cout << "\nSource: " << source << " -> Sink: " << sink << "\n\n";
+  printAdjacencyMatrix();
+  std::cout << "Max flow value: " << maxFlow << std::endl;
+}
 
-  // Reconstruct the path by following the parent chain from destination to source
-  for (int v = sink; v != source; v = parent[v])
-    path.push_back(v);
-
-  // Add the source vertex to the path
-  path.push_back(source);
-
-  // Print the path in reverse order (from source to destination)
-  std::cout << "Shortest Path: ";
-  for (auto it = path.rbegin(); it != path.rend(); ++it)
-    std::cout << *it << " ";
-
+/**
+ * @brief Print adjacency matrix of the graph
+ */
+void Graph::printAdjacencyMatrix()
+{
+  std::cout << "Adjacency Matrix:\n";
+  for (int i = 0; i < numVertices; i++)
+  {
+    for (int j = 0; j < numVertices; j++)
+      std::cout << adjacencyMatrix[i][j] << " ";
+    std::cout << std::endl;
+  }
   std::cout << std::endl;
 }
