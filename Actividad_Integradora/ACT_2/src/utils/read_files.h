@@ -43,7 +43,7 @@
  * @note Time complexity: O(V^2) where V is the number of vertices
  * @note Space complexity: O(V^2) where V is the number of vertices
  */
-[[nodiscard]] std::optional<std::pair<Graph, Graph>>
+[[nodiscard]] std::optional<std::tuple<Graph, Graph, std::vector<std::pair<int, int>>>>
 readGraphFromFile(const std::filesystem::path &filepath)
 {
   std::ifstream file(filepath, std::ios::in | std::ios::binary);
@@ -100,5 +100,21 @@ readGraphFromFile(const std::filesystem::path &filepath)
     }
   }
 
-  return std::make_pair(graph1, graph2);
+  std::vector<std::pair<int, int>> centralCoordinates;
+  std::string line;
+  while (std::getline(ss, line))
+  {
+    line.erase(std::remove(line.begin(), line.end(), '('), line.end());
+    line.erase(std::remove(line.begin(), line.end(), ')'), line.end());
+
+    // Use a stringstream to extract integers
+    std::stringstream ss(line);
+    int x, y;
+    char comma;
+
+    if (ss >> x >> comma >> y)
+      centralCoordinates.emplace_back(x, y);
+  }
+
+  return std::make_optional(std::make_tuple(graph1, graph2, centralCoordinates));
 }

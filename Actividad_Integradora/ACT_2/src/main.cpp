@@ -47,9 +47,11 @@ int main(int argc, char **argv)
   }
 
   // Find optimal caling
-  graphs.value().first.findOptimalCabling();
+  // graphs.value().first.findOptimalCabling();
+  std::get<0>(graphs.value()).findOptimalCabling();
 
   // Find max flow
-  graphs.value().second.findMaxFlow();
+  std::get<1>(graphs.value()).findMaxFlow();
+
   return EXIT_SUCCESS;
 }
