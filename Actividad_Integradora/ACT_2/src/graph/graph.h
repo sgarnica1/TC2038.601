@@ -37,7 +37,6 @@ public:
   void printOptimalCabling(const std::vector<int> &parent);
   void findShortestRoute();
   void printShortestRoute();
-  void setTransmissionCapacities(std::vector<std::vector<int>> &capacities);
   void findMaxFlow();
   void printMaxFlow(int maxFlow, int source, int sink);
   void printAdjacencyMatrix();

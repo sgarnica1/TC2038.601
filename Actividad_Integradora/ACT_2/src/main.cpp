@@ -7,6 +7,7 @@
 
 #include "graph/graph.h"
 #include "utils/read_files.h"
+#include "utils/knn.h"
 #include "utils/logger/logger.h"
 
 /**
@@ -47,11 +48,17 @@ int main(int argc, char **argv)
   }
 
   // Find optimal caling
-  // graphs.value().first.findOptimalCabling();
   std::get<0>(graphs.value()).findOptimalCabling();
 
   // Find max flow
   std::get<1>(graphs.value()).findMaxFlow();
+
+  // Find central
+  std::vector<std::pair<int, int>> centrals = std::get<2>(graphs.value());
+  std::pair<int, int> house = centrals.back();
+  centrals.pop_back();
+
+  knn(centrals, house);
 
   return EXIT_SUCCESS;
 }

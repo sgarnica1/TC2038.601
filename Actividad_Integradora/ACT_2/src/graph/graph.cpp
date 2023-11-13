@@ -268,7 +268,7 @@ bool Graph::bfs(int source, int sink, std::vector<int> &parent)
 void Graph::printMaxFlow(int maxFlow, int source, int sink)
 {
   std::cout << "\nMax Flow found using Edmmonds-Karp algorithm:\n";
-  std::cout << "\nSource: " << source << " -> Sink: " << sink << "\n\n";
+  std::cout << "Source: " << source << " -> Sink: " << sink << "\n\n";
   printAdjacencyMatrix();
   std::cout << "Max flow value: " << maxFlow << std::endl;
 }
