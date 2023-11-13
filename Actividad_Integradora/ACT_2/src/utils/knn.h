@@ -30,6 +30,12 @@
  * two points.
  *
  * @param[in] centrals Vector of pairs of coordinates of centrals
+ * @param[in] house Pair of coordinates of the house
+ *
+ * @return void
+ *
+ * @timecomplexity O(n)
+ * @spacecomplexity O(1)
  */
 
 void knn(std::vector<std::pair<int, int>> &centrals, std::pair<int, int> &house)
