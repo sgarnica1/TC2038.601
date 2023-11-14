@@ -302,6 +302,7 @@ std::string Graph::printAdjacencyMatrix()
  * between all possible permutations of the colonies and selecting the shortest
  * one.
  * @note The algorithm runs in O(n!) time, where n is the number of colonies.
+ * @note The algorithm runs in O(n) space due to the storage of the `colonies`
  * @return Shortest Route and Distance
  *
  */
