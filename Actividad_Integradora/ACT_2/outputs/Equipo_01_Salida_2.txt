@@ -1,0 +1,25 @@
+Minimum Spanning Tree (MST) found using Prim's algorithm:
+0 10 5 0 
+0 0 0 0 
+0 0 0 15 
+0 0 0 0 
+
+Shortest route found using brute force:
+Route: 0 3 2 1 0
+Distance: 0 km
+
+Max Flow found using Edmmonds-Karp algorithm:
+Source: 0 -> Sink: 3
+
+Adjacency Matrix:
+0 10 5 0 
+0 0 15 0 
+0 0 0 15 
+0 0 0 0 
+
+Max flow value: 15
+
+Find closest central to new location using KNN Algorithm & Euclidean distance:
+Location: (325, 200)
+Central is at: (300, 100)
+Distance to new location: 103.078 km

@@ -47,21 +47,29 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
+  // Write to output file
+  std::ofstream output_file("outputs/Equipo_01_Salida_1.txt");
+  if (!output_file.is_open())
+  {
+    LOG_ERROR("Error opening output file");
+    return EXIT_FAILURE;
+  }
+
   // Find optimal caling
-  std::get<0>(graphs.value()).findOptimalCabling();
+  output_file << std::get<0>(graphs.value()).findOptimalCabling();
 
   // Find shortest route
-  std::get<0>(graphs.value()).findShortestRoute();
+  output_file << std::get<0>(graphs.value()).findShortestRoute();
 
   // Find max flow
-  std::get<1>(graphs.value()).findMaxFlow();
+  output_file << std::get<1>(graphs.value()).findMaxFlow();
 
   // Find central
   std::vector<std::pair<int, int>> centrals = std::get<2>(graphs.value());
   std::pair<int, int> house = centrals.back();
   centrals.pop_back();
 
-  knn(centrals, house);
+  output_file << knn(centrals, house);
 
   return EXIT_SUCCESS;
 }

@@ -83,7 +83,7 @@ void Graph::addEdge(int from, int to, int weight)
  *       `parent`, and `inMST` arrays, which all have a size proportional to
  *        the number of vertices
  */
-void Graph::findOptimalCabling()
+std::string Graph::findOptimalCabling()
 {
   std::priority_queue<std::pair<int, int>,
                       std::vector<std::pair<int, int>>,
@@ -132,7 +132,7 @@ void Graph::findOptimalCabling()
     }
   }
 
-  printOptimalCabling(parent);
+  return printOptimalCabling(parent);
 }
 
 /**
@@ -141,7 +141,7 @@ void Graph::findOptimalCabling()
  *
  * @param[in] parent Array containing the parent of each vertex
  */
-void Graph::printOptimalCabling(const std::vector<int> &parent)
+std::string Graph::printOptimalCabling(const std::vector<int> &parent)
 {
   std::ostringstream oss;
   oss << "Minimum Spanning Tree (MST) found using Prim's algorithm:\n";
@@ -159,8 +159,7 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
 
     oss << std::endl;
   }
-
-  std::cout << oss.str();
+  return oss.str();
 }
 
 /**
@@ -185,7 +184,7 @@ void Graph::printOptimalCabling(const std::vector<int> &parent)
  *
  * @return int Max flow
  */
-void Graph::findMaxFlow()
+std::string Graph::findMaxFlow()
 {
   int maxFlow = 0, source = 0, sink = numVertices - 1;
   std::vector<int> parent(numVertices, -1);
@@ -216,7 +215,7 @@ void Graph::findMaxFlow()
     }
   }
 
-  printMaxFlow(maxFlow, source, sink);
+  return printMaxFlow(maxFlow, source, sink);
 }
 
 /**
@@ -269,27 +268,32 @@ bool Graph::bfs(int source, int sink, std::vector<int> &parent)
  * @param[in] parent Array containing the parent of each vertex
  */
 
-void Graph::printMaxFlow(int maxFlow, int source, int sink)
+std::string Graph::printMaxFlow(int maxFlow, int source, int sink)
 {
-  std::cout << "\nMax Flow found using Edmmonds-Karp algorithm:\n";
-  std::cout << "Source: " << source << " -> Sink: " << sink << "\n\n";
-  printAdjacencyMatrix();
-  std::cout << "Max flow value: " << maxFlow << std::endl;
+  std::ostringstream oss;
+  oss << "\nMax Flow found using Edmmonds-Karp algorithm:\n";
+  oss << "Source: " << source << " -> Sink: " << sink << "\n\n";
+  oss << printAdjacencyMatrix();
+  oss << "Max flow value: " << maxFlow << std::endl;
+
+  return oss.str();
 }
 
 /**
  * @brief Print adjacency matrix of the graph
  */
-void Graph::printAdjacencyMatrix()
+std::string Graph::printAdjacencyMatrix()
 {
-  std::cout << "Adjacency Matrix:\n";
+  std::ostringstream oss;
+  oss << "Adjacency Matrix:\n";
   for (int i = 0; i < numVertices; i++)
   {
     for (int j = 0; j < numVertices; j++)
-      std::cout << adjacencyMatrix[i][j] << " ";
-    std::cout << std::endl;
+      oss << adjacencyMatrix[i][j] << " ";
+    oss << std::endl;
   }
-  std::cout << std::endl;
+  oss << std::endl;
+  return oss.str();
 }
 
 /**
@@ -299,9 +303,9 @@ void Graph::printAdjacencyMatrix()
  * one.
  * @note The algorithm runs in O(n!) time, where n is the number of colonies.
  * @return Shortest Route and Distance
- * 
+ *
  */
-void Graph::findShortestRoute()
+std::string Graph::findShortestRoute()
 {
   // Obtain number of colonies
   int numColonies = getNumVertices();
@@ -309,11 +313,9 @@ void Graph::findShortestRoute()
   // Create the list of colonies
   std::vector<int> colonies;
   for (int i = 0; i < numColonies; ++i)
-  {
     colonies.push_back(i);
-  }
 
-  // Store the shortest route 
+  // Store the shortest route
   std::vector<int> shortestRoute = colonies;
 
   // Store the shortest distance
@@ -325,9 +327,7 @@ void Graph::findShortestRoute()
     int currentDistance = 0;
 
     for (int i = 0; i < numColonies - 1; ++i)
-    {
       currentDistance += getEdgeWeight(colonies[i], colonies[i + 1]);
-    }
 
     currentDistance += getEdgeWeight(colonies[numColonies - 1], colonies[0]);
 
@@ -340,7 +340,7 @@ void Graph::findShortestRoute()
   } while (std::next_permutation(colonies.begin(), colonies.end()));
 
   // Print the shortest route found
-  printShortestRoute(shortestRoute, shortestDistance);
+  return printShortestRoute(shortestRoute, shortestDistance);
 }
 
 /**
@@ -351,7 +351,6 @@ int Graph::getNumVertices() const
 {
   return numVertices;
 }
-
 
 /**
  * @brief Get the weight of the edge between two vertices
@@ -366,25 +365,26 @@ int Graph::getEdgeWeight(int from, int to) const
   else
   {
     LOG_ERROR("Invalid vertices provided to getEdgeWeight");
-    return -1; 
+    return -1;
   }
 }
-
 
 /**
  * @brief Print the Shortest Route
  * @param[in] route Shortest route
  * @param[in] distance Shortest distance
  */
-void Graph::printShortestRoute(const std::vector<int> &route, int distance)
+std::string Graph::printShortestRoute(const std::vector<int> &route, int distance)
 {
-  std::cout << "\nShortest route found using brute force:\n";
-  std::cout << "Route: ";
+  std::ostringstream oss;
+  oss << "\nShortest route found using brute force:\n";
+  oss << "Route: ";
   for (int colony : route)
   {
-    std::cout << colony << " ";
+    oss << colony << " ";
   }
-  std::cout << route[0] << "\n";
-  std::cout << "Distance: " << distance << " km\n";
-}
+  oss << route[0] << "\n";
+  oss << "Distance: " << distance << " km\n";
 
+  return oss.str();
+}

@@ -33,13 +33,13 @@ public:
   // Methods
   void addEdge(int from, int to, int weight);
 
-  void findOptimalCabling();
-  void printOptimalCabling(const std::vector<int> &parent);
-  void findShortestRoute();
-  void printShortestRoute(const std::vector<int> &route, int distance);
-  void findMaxFlow();
-  void printMaxFlow(int maxFlow, int source, int sink);
-  void printAdjacencyMatrix();
+  std::string findOptimalCabling();
+  std::string printOptimalCabling(const std::vector<int> &parent);
+  std::string findShortestRoute();
+  std::string printShortestRoute(const std::vector<int> &route, int distance);
+  std::string findMaxFlow();
+  std::string printMaxFlow(int maxFlow, int source, int sink);
+  std::string printAdjacencyMatrix();
   int getNumVertices() const;
   int getEdgeWeight(int from, int to) const;
 

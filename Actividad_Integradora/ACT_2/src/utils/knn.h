@@ -38,11 +38,12 @@
  * @spacecomplexity O(1)
  */
 
-void knn(std::vector<std::pair<int, int>> &centrals, std::pair<int, int> &house)
+std::string knn(std::vector<std::pair<int, int>> &centrals, std::pair<int, int> &house)
 {
   // Find the closest central using Euclidean distance
   int closestCentralIndex = -1;
   double minDistance = std::numeric_limits<double>::max(); // Initialize with a large value
+  std::ostringstream oss;
 
   for (int i = 0; i < centrals.size(); ++i)
   {
@@ -58,15 +59,17 @@ void knn(std::vector<std::pair<int, int>> &centrals, std::pair<int, int> &house)
 
   if (closestCentralIndex != -1)
   {
-    std::cout << "\nFind closest central to new location using KNN Algorithm & Euclidean distance:\n";
-    std::cout << "Location: (" << house.first << ", " << house.second << ")\n";
-    std::cout << "Central is at: (" << centrals[closestCentralIndex].first << ", " << centrals[closestCentralIndex].second << ")\n";
-    std::cout << "Distance to new location: " << minDistance << std::endl;
+    oss << "\nFind closest central to new location using KNN Algorithm & Euclidean distance:\n";
+    oss << "Location: (" << house.first << ", " << house.second << ")\n";
+    oss << "Central is at: (" << centrals[closestCentralIndex].first << ", " << centrals[closestCentralIndex].second << ")\n";
+    oss << "Distance to new location: " << minDistance << " km" << std::endl;
   }
   else
   {
-    std::cout << "No central found." << std::endl;
+    oss << "No central found." << std::endl;
   }
+
+  return oss.str();
 }
 
 #endif // KNN_H
