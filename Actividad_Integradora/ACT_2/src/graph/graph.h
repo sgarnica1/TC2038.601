@@ -36,10 +36,12 @@ public:
   void findOptimalCabling();
   void printOptimalCabling(const std::vector<int> &parent);
   void findShortestRoute();
-  void printShortestRoute();
+  void printShortestRoute(const std::vector<int> &route, int distance);
   void findMaxFlow();
   void printMaxFlow(int maxFlow, int source, int sink);
   void printAdjacencyMatrix();
+  int getNumVertices() const;
+  int getEdgeWeight(int from, int to) const;
 
 private:
   int numVertices;
