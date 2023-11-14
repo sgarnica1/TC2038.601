@@ -51,7 +51,7 @@ int main(int argc, char **argv)
   std::get<0>(graphs.value()).findOptimalCabling();
 
   // Find shortest route
-  //std::get<0>(graphs.value()).findShortestRoute();
+  std::get<0>(graphs.value()).findShortestRoute();
 
   // Find max flow
   std::get<1>(graphs.value()).findMaxFlow();
