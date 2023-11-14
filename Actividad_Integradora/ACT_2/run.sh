@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Check if an input file was provided
 if [ "$#" -ne 1 ]; then

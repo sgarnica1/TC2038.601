@@ -17,6 +17,10 @@
 #include "graph.h"
 #include "../utils/logger/logger.h"
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 /**
  * @brief Construct a new Graph:: Graph object
  * @param[in] numVertices Number of vertices in the graph
@@ -287,3 +291,100 @@ void Graph::printAdjacencyMatrix()
   }
   std::cout << std::endl;
 }
+
+/**
+ * @brief Finds the Shortest Route using brute force
+ * @details This method finds the shortest route by calculating the distance
+ * between all possible permutations of the colonies and selecting the shortest
+ * one.
+ * @note The algorithm runs in O(n!) time, where n is the number of colonies.
+ * @return Shortest Route and Distance
+ * 
+ */
+void Graph::findShortestRoute()
+{
+  // Obtain number of colonies
+  int numColonies = getNumVertices();
+
+  // Create the list of colonies
+  std::vector<int> colonies;
+  for (int i = 0; i < numColonies; ++i)
+  {
+    colonies.push_back(i);
+  }
+
+  // Store the shortest route 
+  std::vector<int> shortestRoute = colonies;
+
+  // Store the shortest distance
+  int shortestDistance = std::numeric_limits<int>::max();
+
+  // Find the shortest route with brute force
+  do
+  {
+    int currentDistance = 0;
+
+    for (int i = 0; i < numColonies - 1; ++i)
+    {
+      currentDistance += getEdgeWeight(colonies[i], colonies[i + 1]);
+    }
+
+    currentDistance += getEdgeWeight(colonies[numColonies - 1], colonies[0]);
+
+    if (currentDistance < shortestDistance)
+    {
+      shortestDistance = currentDistance;
+      shortestRoute = colonies;
+    }
+
+  } while (std::next_permutation(colonies.begin(), colonies.end()));
+
+  // Print the shortest route found
+  printShortestRoute(shortestRoute, shortestDistance);
+}
+
+/**
+ * @brief Get the number of vertices in the graph
+ * @return int Number of vertices
+ */
+int Graph::getNumVertices() const
+{
+  return numVertices;
+}
+
+
+/**
+ * @brief Get the weight of the edge between two vertices
+ * @param[in] from Source vertex
+ * @param[in] to Destination vertex
+ * @return int Weight of the edge
+ */
+int Graph::getEdgeWeight(int from, int to) const
+{
+  if (from >= 0 && from < numVertices && to >= 0 && to < numVertices)
+    return adjacencyMatrix[from][to];
+  else
+  {
+    LOG_ERROR("Invalid vertices provided to getEdgeWeight");
+    return -1; 
+  }
+}
+
+
+/**
+ * @brief Print the Shortest Route
+ * @param[in] route Shortest route
+ * @param[in] distance Shortest distance
+ */
+void Graph::printShortestRoute(const std::vector<int> &route, int distance)
+{
+  std::cout << "\nShortest route found using brute force:\n";
+  std::cout << "Route: ";
+  for (int colony : route)
+  {
+    std::cout << colony << " ";
+  }
+  std::cout << route[0] << "\n";
+  std::cout << "Distance: " << distance << " km\n";
+}
+
